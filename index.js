@@ -1,6 +1,9 @@
 //Functions
 /*
-first class functions that are assigned to a variable, returned from a function and also can be passed as an argument"
+
+A programming language is said to have First-class functions when functions in that language are treated like any other variable.
+For example, in such a language, a function can be passed as an argument to other functions, can be returned by another function and can be assigned as a value to a variable.
+Mozilla docs
 e.g. const hello = () => console.log('hello world!)
 */
 
@@ -8,7 +11,19 @@ e.g. const hello = () => console.log('hello world!)
  * A function expression is very similar to and has almost the same syntax as a function declaration (see function statement for details). 
  * The main difference between a function expression and a function declaration is the function name, 
  * which can be omitted in function expressions to create anonymous functions.
- */
+ *
+ *  A function expression has to be stored in a variable and can be accessed using variableName
+ * 
+ * >> function declaration
+ * function functionName(x, y) { statements... return (z) };
+ * 
+ * >> function expression (anonymous)
+ * let variableName = function(x, y) { statements... return (z) };
+ * 
+ * >> function expression (named)
+ * let variableName = function functionName(x, y) { statements... return (z) };
+ * /
+
 // CLosures
 
 function buildfunctions () {
@@ -67,7 +82,6 @@ buildfunctions3()[2]();
 // Applying closures 
 // Function Factories
 function makeGreetings (language) {
-
     return function (firstname, lastname) {
         if(language == 'en') {
             console.log(`hello ${firstname} ${lastname}`);
@@ -79,12 +93,10 @@ function makeGreetings (language) {
     }
 }
 
-
 function sayHiLater() {
     //function setTimeOut used closures to access greeting
     var greeting = 'hi';
     setTimeout(() => console.log(greeting), 1000);
-
 }
 
 sayHiLater();
@@ -253,4 +265,130 @@ console.log(arr4, 'this is the array 4>>>>>>')
 // avoid mutating data in the nested functions, any changes in data should happen at the highest level possible
 
 
+/// OBJECTS
+
+/**
+ * Inheritance in js means one object gets access to another object properties and methods.
+ * 
+ * There are two kinds of object inheritance
+ * 
+ * 1. Classical Inheritance
+ * 2. Prototype Inheritance
+ * 
+*/
+
+/// Function Constructors
+
+/**   
+ * A function constructor is a normal function that is used to construct objects
+ * the 'this' variable points to an empty object, and that function is returned from the object automatically
+ */
+
+function Person() {
+    this.firstname = 'ade';
+    this.lastname = 'yemi'
+}
+
+// new keyword here enables us to build function constructors
+
+var john = new Person();
+console.log(john, 'this is john>>>>'); // this john is equal to {firstname: 'ade', lastname: 'yemi'}
+
+// this new keyword makes the this property of person into an empty object {}
+// the addition we do to that new object i.e. this.firstname and this.lastname gets returned into john provided we didnt return a value explicitly i.e.
+
+function Person2() {
+    this.firstname = 'ade';
+    this.lastname = 'yemi';
+    return {}
+}
+
+var jane = new Person2(); 
+console.log(jane, 'this is jane>>>>>>'); // this jane is equal to {}
+
+
+//Every Function has a prototype value e.g. jane.__proto__ or Person2.prototype
+// the prototype value of a function is the value of its prototype when using the function as a function constructor
+// so the following below would work
+var jude = new Person();
+Person.prototype.getFullName = function() {
+    return this.firstname + ' ' + this.lastname; 
+}
+
+// so we can do 
+
+console.log(jude.getFullName());
+
+// its better to place more methods on the prototype cause all instance of the object would share one single prototype
+
+// Example of inbuilt function constructors in js
+// the num.toFixed lives on the function constructor Number.prototype
+var num = new Number('3');
+console.log(num.toFixed(2));
+
+
+//  here we create a primitive 
+// the javascript engine wrap this primitive into a function constructor of type Number i.e. 
+
+// var num2 = new Number(3);
+var num2 = 3
+console.log(num2.toFixed(2));
+
+// A more popular function constructor is 
+
+var date = new Date('3/1/2015');
+
+
+// with function constructor we can add more functionalitites to inbuilt primitives in javascript by updating the prototype inheritance
+
+String.prototype.isLengthGreaterThan = function (limit) {
+    return this.length > limit
+}
+// all strings moving forward would have access to this, since they all share the same prototype
+console.log("hello".isLengthGreaterThan(10), 'this is the hello world>>>>');
+
+// you need to be careful here not to override an existing functionality and mostly this works for most
+
+//avoid using (for in ) while using arrays in js so you wont loop into prototype values defined by another library or package
+//e.g
+
+Array.prototype.getlength = function() {
+    return this.length;
+}
+var arrNew = [1,2,3]
+
+let lengthOfEverything = 0;
+for(i in arrNew) {
+        lengthOfEverything ++;
+}
+
+console.log(lengthOfEverything, 'length of everything>>>>') 
+// here we get 4 cause of the extra inbuilt property we added kindly use standard for loops for arrays
+// our lengthOfEverything should be 3 
+
+// A polyfill adds a feature which the engine may lack
+
+var b = 'Hello';
+console.log(typeof b);
+
+var d = [];
+console.log(typeof d); // returns an empty string wierd!
+console.log(Object.prototype.toString.call(d)) //returns [object Array]
+
+var z = function () {}
+console.log(typeof z) // prints a function
+
+// using use strict in javascript 
+
+/**
+ * using use strict in js
+ * you could add use strict to the top of the file or the top of the function
+ * 
+*/
+
+function UseStrictInFunction() {
+    "use strict"
+    person2 = [];
+    console.log(person2);
+}
 
